@@ -6,22 +6,20 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Consolas', monospace; color: white; user-select: none; }
         
-        /* --- GLITCH ANIMATION --- */
+        /* --- GLITCH & ANIMATIONS --- */
         @keyframes glitch {
             0% { transform: translate(0); }
-            20% { transform: translate(-5px, 5px); filter: hue-rotate(90deg); }
-            40% { transform: translate(5px, -5px); filter: invert(1); }
-            60% { transform: translate(-5px, -2px); }
-            80% { transform: translate(2px, 2px); filter: hue-rotate(-90deg); }
+            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+            40% { transform: translate(3px, -3px); filter: invert(0.2); }
+            60% { transform: translate(-3px, -1px); }
             100% { transform: translate(0); }
         }
+        .glitching { animation: glitch 0.15s infinite; }
 
-        .glitching { animation: glitch 0.2s infinite; }
-
-        /* --- UI & RAINBOW --- */
         @keyframes rainbow { 0% { color: red; } 20% { color: yellow; } 40% { color: green; } 60% { color: blue; } 80% { color: purple; } 100% { color: red; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
+        /* --- UI --- */
         .screen { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
         #loader { display: flex; background: #000; z-index: 2000; }
         #progress-fill { width: 0%; height: 100%; background: #00d4ff; transition: width 0.1s; }
@@ -32,12 +30,12 @@
         .main-btn { background: transparent; border: 1px solid #fff; color: #fff; padding: 12px 30px; cursor: pointer; font-size: 1.1em; transition: 0.3s; margin: 5px; }
         .main-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
 
-        /* GAMEPLAY */
+        /* GAMEPLAY UI */
         #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; padding: 40px; box-sizing: border-box; z-index: 10; pointer-events: none; flex-direction: column; justify-content: space-between; }
-        .panel { pointer-events: auto; background: rgba(0,0,0,0.85); border: 1px solid #00d4ff; padding: 30px; transition: 0.5s; }
+        .panel { pointer-events: auto; background: rgba(0,0,0,0.85); border: 1px solid #00d4ff; padding: 30px; }
         #outcome-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px; z-index: 50; }
         
-        #stability-val { font-size: 3em; font-weight: bold; transition: color 0.5s; }
+        #stability-val { font-size: 3em; font-weight: bold; transition: color 0.5s; color: #00ffcc; }
         #music-container { position: absolute; left: -9999px; visibility: hidden; }
     </style>
 </head>
@@ -48,26 +46,26 @@
     </div>
 
     <div id="loader" class="screen">
-        <div>SYNCING MULTIVERSE...</div>
+        <div style="letter-spacing: 5px;">SHUFFLING TIMELINES...</div>
         <div style="width: 300px; height: 2px; background: #222; margin-top: 20px;"><div id="progress-fill"></div></div>
         <div style="margin-top: 30px; opacity: 0.6; font-size: 0.8em;">Credits to - Ashen(@ashenthegreat3992)</div>
     </div>
 
     <div id="menu" class="screen">
         <div id="roblox-promo">Go follow the creator of this website on roblox, darkco281110!</div>
-        <h1 style="font-size: 4em; letter-spacing: 12px;">THE BUTTERFLY LEDGER</h1>
+        <h1 style="font-size: 4em; letter-spacing: 12px; margin-bottom: 0;">THE BUTTERFLY LEDGER</h1>
         <div style="color: #666; margin-bottom: 40px;">btw this is a decision making game :)</div>
         <button class="main-btn" onclick="triggerIntroFlow()">PLAY</button>
     </div>
 
     <div id="intro" class="screen">
-        <div id="intro-text-box" style="font-size: 1.6em; text-align: center; animation: fadeInOut 4s infinite;"></div>
+        <div id="intro-text-box" style="font-size: 1.6em; text-align: center;"></div>
     </div>
 
     <div id="game-ui">
         <div class="panel" id="main-panel" style="width: 450px;">
             <div id="shift-label" style="color: #00d4ff; font-size: 0.8em; margin-bottom: 10px;">SHIFT 1</div>
-            <div id="scenario-text" style="min-height: 80px; font-size: 1.2em;">Initializing...</div>
+            <div id="scenario-text" style="min-height: 80px; font-size: 1.2em;">Connecting...</div>
             <div style="display:flex; gap:15px; margin-top:20px;">
                 <button class="main-btn" style="flex:1; border-color:#00ff00;" onclick="handleChoice(true)">APPROVE</button>
                 <button class="main-btn" style="flex:1; border-color:#ff0000;" onclick="handleChoice(false)">DENY</button>
@@ -88,22 +86,28 @@
     <script type="module">
         import * as THREE from 'three';
 
-        // --- GENERATE 200 SCENARIOS ---
-        const types = [
-            { n: "Baker", s: "price of bread", pos: "Hunger ended.", neg: "Economy crashed.", risk: 0.7 },
-            { n: "AI", s: "central grid", pos: "Efficiency doubled.", neg: "Blackout occurred.", risk: 0.3 },
-            { n: "Scientist", s: "new energy", pos: "Clean world.", neg: "Explosion.", risk: 0.6 },
-            { n: "Void", s: "portal access", pos: "Free travel.", neg: "Demons arrived.", risk: 0.2 }
-        ];
-        const Scenarios = Array.from({length: 200}, (_, i) => {
-            const t = types[i % types.length];
-            return {
-                text: `A ${t.n} wants to modify the ${t.s}.`,
-                pos: t.pos, neg: t.neg,
-                chance: t.risk
-            };
-        });
+        // --- IMPROVED SCENARIO GENERATOR ---
+        const subjects = ["A Baker", "A Rogue AI", "A Scientist", "A Child", "A Time Traveler", "A Cultist", "A Ghost", "A Politician", "An Alien", "A Robot"];
+        const actions = ["lower bread prices", "re-route the power grid", "release bio-bees", "plant a star-seed", "rewrite yesterday", "open a dark portal", "haunt the library", "ban all colors", "land their saucer", "upload the city"];
+        const goods = ["The people were fed and happy.", "Energy became free for everyone.", "Nature flourished instantly.", "A beautiful crystal tree grew.", "A major war was avoided.", "Forbidden knowledge was safely stored.", "The city gained a wise guardian.", "Society became peaceful.", "They shared advanced medicine.", "Humanity reached a digital utopia."];
+        const bads = ["The economy collapsed into dust.", "A massive city-wide blackout occurred.", "The bees caused a glowing plague.", "The seed sprouted a monster.", "Tomorrow was accidentally erased.", "Demons flooded the streets.", "Everyone lost their ability to sleep.", "The world turned grey and hopeless.", "They began the harvesting process.", "The server crashed, killing millions."];
 
+        function generateScenarios(count) {
+            let list = [];
+            for(let i=0; i<count; i++) {
+                let subIdx = Math.floor(Math.random() * subjects.length);
+                let actIdx = Math.floor(Math.random() * actions.length);
+                list.push({
+                    text: `${subjects[subIdx]} wants to ${actions[actIdx]}.`,
+                    pos: goods[actIdx], // Matches the action's positive outcome
+                    neg: bads[actIdx],  // Matches the action's negative outcome
+                    chance: Math.random() * 0.6 + 0.2 // Random risk between 20% and 80%
+                });
+            }
+            return list.sort(() => Math.random() - 0.5); // SHUFFLE THE ENTIRE LIST
+        }
+
+        const Scenarios = generateScenarios(200);
         let state = { idx: 0, stability: 100, isProcessing: false };
 
         // --- THREE.JS ---
@@ -123,9 +127,9 @@
             scene.add(fb);
             const start = performance.now();
             function move(now) {
-                const p = (now - start) / 600;
+                const p = (now - start) / 500;
                 if (p < 1) { fb.position.lerp(new THREE.Vector3(0,0,0), p); requestAnimationFrame(move); }
-                else { scene.remove(fb); core.material.color.set(0xff0000); setTimeout(()=>core.material.color.set(state.stability < 30 ? 0xff0000 : 0x00d4ff), 100); }
+                else { scene.remove(fb); }
             }
             requestAnimationFrame(move);
         }
@@ -135,7 +139,7 @@
             const intro = document.getElementById('intro');
             const box = document.getElementById('intro-text-box');
             intro.style.display = 'flex';
-            const lines = ["Welcome, Keeper.", "Reality is fragile.", "Watch the Core.", "Do not let stability fail."];
+            const lines = ["Welcome, Keeper.", "Reality has been shuffled.", "No two journeys are the same.", "Watch the Core."];
             let cur = 0;
             const cycle = setInterval(() => {
                 box.innerText = lines[cur++];
@@ -159,7 +163,7 @@
 
             const overlay = document.getElementById('outcome-overlay');
             overlay.style.display = 'flex';
-            document.getElementById('outcome-status').innerText = correct ? "STABLE" : "UNSTABLE";
+            document.getElementById('outcome-status').innerText = correct ? "STABLE" : "FRACTURED";
             document.getElementById('outcome-status').style.color = correct ? "#00ff00" : "#ff0000";
             document.getElementById('outcome-desc').innerText = correct ? s.pos : s.neg;
 
@@ -169,7 +173,7 @@
                 state.idx++;
                 updateUI();
                 state.isProcessing = false;
-            }, 2000);
+            }, 2500);
         };
 
         function updateUI() {
@@ -178,12 +182,12 @@
             const stabEl = document.getElementById('stability-val');
             stabEl.innerText = state.stability + "%";
             
-            // COLOR CHANGE
+            // STABILITY COLOR
             if (state.stability > 70) stabEl.style.color = "#00ffcc";
             else if (state.stability > 30) stabEl.style.color = "#ffcc00";
             else stabEl.style.color = "#ff0000";
 
-            // GLITCH EFFECT TRIGGER
+            // GLITCH EFFECT
             if (state.stability < 25) {
                 document.getElementById('main-body').classList.add('glitching');
                 core.material.color.set(0xff0000);
@@ -192,7 +196,7 @@
                 core.material.color.set(0x00d4ff);
             }
 
-            if(state.stability <= 0) { alert("TIMELINE COLLAPSED"); location.reload(); }
+            if(state.stability <= 0) { alert("REALITY COLLAPSED"); location.reload(); }
         }
 
         let lp = 0;
@@ -200,7 +204,7 @@
             lp += 10;
             document.getElementById('progress-fill').style.width = lp + "%";
             if(lp >= 100) { clearInterval(li); document.getElementById('loader').style.display = 'none'; document.getElementById('menu').style.display = 'flex'; }
-        }, 50);
+        }, 80);
 
         function animate() {
             requestAnimationFrame(animate);
