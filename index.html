@@ -6,12 +6,11 @@
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Consolas', monospace; color: white; user-select: none; }
         
-        /* --- GLITCH & ANIMATIONS --- */
+        /* --- DANGER EFFECTS --- */
         @keyframes glitch {
             0% { transform: translate(0); }
-            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
-            40% { transform: translate(3px, -3px); filter: invert(0.2); }
-            60% { transform: translate(-3px, -1px); }
+            20% { transform: translate(-3px, 3px); filter: brightness(1.5) contrast(1.2); }
+            40% { transform: translate(3px, -3px); filter: hue-rotate(45deg); }
             100% { transform: translate(0); }
         }
         .glitching { animation: glitch 0.15s infinite; }
@@ -19,7 +18,7 @@
         @keyframes rainbow { 0% { color: red; } 20% { color: yellow; } 40% { color: green; } 60% { color: blue; } 80% { color: purple; } 100% { color: red; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
-        /* --- UI --- */
+        /* --- UI LAYOUT --- */
         .screen { position: fixed; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; }
         #loader { display: flex; background: #000; z-index: 2000; }
         #progress-fill { width: 0%; height: 100%; background: #00d4ff; transition: width 0.1s; }
@@ -30,12 +29,11 @@
         .main-btn { background: transparent; border: 1px solid #fff; color: #fff; padding: 12px 30px; cursor: pointer; font-size: 1.1em; transition: 0.3s; margin: 5px; }
         .main-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
 
-        /* GAMEPLAY UI */
         #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; padding: 40px; box-sizing: border-box; z-index: 10; pointer-events: none; flex-direction: column; justify-content: space-between; }
-        .panel { pointer-events: auto; background: rgba(0,0,0,0.85); border: 1px solid #00d4ff; padding: 30px; }
+        .panel { pointer-events: auto; background: rgba(0,0,0,0.9); border: 1px solid #00d4ff; padding: 30px; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
         #outcome-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px; z-index: 50; }
         
-        #stability-val { font-size: 3em; font-weight: bold; transition: color 0.5s; color: #00ffcc; }
+        #stability-val { font-size: 3.5em; font-weight: bold; transition: color 0.5s; color: #00ffcc; }
         #music-container { position: absolute; left: -9999px; visibility: hidden; }
     </style>
 </head>
@@ -46,7 +44,7 @@
     </div>
 
     <div id="loader" class="screen">
-        <div style="letter-spacing: 5px;">SHUFFLING TIMELINES...</div>
+        <div style="letter-spacing: 5px; font-weight: bold;">CALIBRATING REALITY...</div>
         <div style="width: 300px; height: 2px; background: #222; margin-top: 20px;"><div id="progress-fill"></div></div>
         <div style="margin-top: 30px; opacity: 0.6; font-size: 0.8em;">Credits to - Ashen(@ashenthegreat3992)</div>
     </div>
@@ -54,29 +52,29 @@
     <div id="menu" class="screen">
         <div id="roblox-promo">Go follow the creator of this website on roblox, darkco281110!</div>
         <h1 style="font-size: 4em; letter-spacing: 12px; margin-bottom: 0;">THE BUTTERFLY LEDGER</h1>
-        <div style="color: #666; margin-bottom: 40px;">btw this is a decision making game :)</div>
-        <button class="main-btn" onclick="triggerIntroFlow()">PLAY</button>
+        <div style="color: #666; margin-bottom: 40px; font-style: italic;">"Every choice is a 50/50 gamble."</div>
+        <button class="main-btn" onclick="triggerIntroFlow()">START SIMULATION</button>
     </div>
 
     <div id="intro" class="screen">
-        <div id="intro-text-box" style="font-size: 1.6em; text-align: center;"></div>
+        <div id="intro-text-box" style="font-size: 1.6em; text-align: center; max-width: 600px; line-height: 1.5;"></div>
     </div>
 
     <div id="game-ui">
-        <div class="panel" id="main-panel" style="width: 450px;">
-            <div id="shift-label" style="color: #00d4ff; font-size: 0.8em; margin-bottom: 10px;">SHIFT 1</div>
-            <div id="scenario-text" style="min-height: 80px; font-size: 1.2em;">Connecting...</div>
+        <div class="panel" id="main-panel" style="width: 500px;">
+            <div id="shift-label" style="color: #00d4ff; font-size: 0.8em; margin-bottom: 10px; font-weight: bold;">DECISION NODE</div>
+            <div id="scenario-text" style="min-height: 100px; font-size: 1.3em; line-height: 1.4;">Connecting...</div>
             <div style="display:flex; gap:15px; margin-top:20px;">
                 <button class="main-btn" style="flex:1; border-color:#00ff00;" onclick="handleChoice(true)">APPROVE</button>
                 <button class="main-btn" style="flex:1; border-color:#ff0000;" onclick="handleChoice(false)">DENY</button>
             </div>
             <div id="outcome-overlay">
-                <div id="outcome-status" style="font-size: 1.5em; font-weight: bold; margin-bottom: 10px;"></div>
-                <div id="outcome-desc" style="color: #ccc;"></div>
+                <div id="outcome-status" style="font-size: 1.8em; font-weight: bold; margin-bottom: 10px;"></div>
+                <div id="outcome-desc" style="color: #ccc; font-size: 1.1em; max-width: 400px;"></div>
             </div>
         </div>
-        <div class="panel" style="width: 200px; text-align: right; align-self: flex-end;">
-            <div style="font-size: 0.8em; color: #00d4ff;">STABILITY</div>
+        <div class="panel" style="width: 220px; text-align: right; align-self: flex-end;">
+            <div style="font-size: 0.9em; color: #00d4ff; letter-spacing: 2px;">STABILITY INDEX</div>
             <div id="stability-val">100%</div>
         </div>
     </div>
@@ -86,28 +84,83 @@
     <script type="module">
         import * as THREE from 'three';
 
-        // --- IMPROVED SCENARIO GENERATOR ---
-        const subjects = ["A Baker", "A Rogue AI", "A Scientist", "A Child", "A Time Traveler", "A Cultist", "A Ghost", "A Politician", "An Alien", "A Robot"];
-        const actions = ["lower bread prices", "re-route the power grid", "release bio-bees", "plant a star-seed", "rewrite yesterday", "open a dark portal", "haunt the library", "ban all colors", "land their saucer", "upload the city"];
-        const goods = ["The people were fed and happy.", "Energy became free for everyone.", "Nature flourished instantly.", "A beautiful crystal tree grew.", "A major war was avoided.", "Forbidden knowledge was safely stored.", "The city gained a wise guardian.", "Society became peaceful.", "They shared advanced medicine.", "Humanity reached a digital utopia."];
-        const bads = ["The economy collapsed into dust.", "A massive city-wide blackout occurred.", "The bees caused a glowing plague.", "The seed sprouted a monster.", "Tomorrow was accidentally erased.", "Demons flooded the streets.", "Everyone lost their ability to sleep.", "The world turned grey and hopeless.", "They began the harvesting process.", "The server crashed, killing millions."];
+        // --- MASSIVELY EXPANDED REALISTIC LISTS ---
+        const subjects = [
+            "A tech conglomerate", "The City Council", "A National Union", "A group of Surgeons", 
+            "A pharmaceutical firm", "A School Board", "An Oil Executive", "A Civil Engineer", 
+            "A massive NGO", "A startup founder", "A social media giant", "An urban planning committee",
+            "A global shipping magnate", "A coalition of farmers", "A network of librarians"
+        ];
 
-        function generateScenarios(count) {
+        const actions = [
+            "replace all human truck drivers with AI",
+            "implement a mandatory 4-day work week",
+            "build a massive dam on the local river",
+            "digitize all physical medical records",
+            "increase the minimum wage by $10",
+            "install facial recognition in all parks",
+            "legalize a performance-enhancing drug",
+            "tax all digital financial transactions",
+            "dredge the harbor for larger ships",
+            "standardize AI-graded student exams",
+            "outlaw all single-use plastic packaging",
+            "ban anonymous social media accounts",
+            "convert all vacant malls into public housing",
+            "implement a universal basic income",
+            "automate the city's emergency response calls"
+        ];
+
+        const goods = [
+            "Logistics became 50% cheaper and faster.",
+            "Worker morale skyrocketed; productivity peaked.",
+            "The region gained 100% clean hydro-energy.",
+            "Doctors diagnosed terminal illnesses 3x faster.",
+            "The local economy boomed; poverty vanished.",
+            "Crime in public spaces fell by 30% instantly.",
+            "Human cognitive output reached a new ceiling.",
+            "The national deficit was cleared within a year.",
+            "Port revenue tripled, creating thousands of jobs.",
+            "Education quality reached perfect consistency.",
+            "The oceans began to heal for the first time.",
+            "Online harassment vanished; discourse improved.",
+            "Homelessness in the city dropped to near zero.",
+            "People spent more time on art and community.",
+            "Response times for fires dropped to 60 seconds."
+        ];
+
+        const bads = [
+            "Mass unemployment led to violent nation-wide riots.",
+            "The economy slowed; major corporations fled.",
+            "The river ecosystem died; the valley flooded.",
+            "A massive leak exposed every citizen's vitals.",
+            "Hyper-inflation turned the currency into paper.",
+            "The system was used to track and silence rivals.",
+            "Addiction rates crippled the working class.",
+            "The digital market crashed; millions lost savings.",
+            "Erosion destroyed the city's coastal foundation.",
+            "Creativity died; students became mere test-bots.",
+            "Supply chains broke; food prices soared by 200%.",
+            "Free speech died; the state took full control.",
+            "Property values collapsed; the city went bankrupt.",
+            "No one wanted to work; the labor force died out.",
+            "The system glitched, ignoring thousands of calls."
+        ];
+
+        function generateRealisticScenarios(count) {
             let list = [];
             for(let i=0; i<count; i++) {
-                let subIdx = Math.floor(Math.random() * subjects.length);
-                let actIdx = Math.floor(Math.random() * actions.length);
+                let sIdx = Math.floor(Math.random() * subjects.length);
+                let aIdx = Math.floor(Math.random() * actions.length); // Keep action/good/bad synced
                 list.push({
-                    text: `${subjects[subIdx]} wants to ${actions[actIdx]}.`,
-                    pos: goods[actIdx], // Matches the action's positive outcome
-                    neg: bads[actIdx],  // Matches the action's negative outcome
-                    chance: Math.random() * 0.6 + 0.2 // Random risk between 20% and 80%
+                    text: `${subjects[sIdx]} wants to ${actions[aIdx]}.`,
+                    pos: goods[aIdx],
+                    neg: bads[aIdx]
                 });
             }
-            return list.sort(() => Math.random() - 0.5); // SHUFFLE THE ENTIRE LIST
+            return list.sort(() => Math.random() - 0.5);
         }
 
-        const Scenarios = generateScenarios(200);
+        const Scenarios = generateRealisticScenarios(200);
         let state = { idx: 0, stability: 100, isProcessing: false };
 
         // --- THREE.JS ---
@@ -116,14 +169,13 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
-
         const core = new THREE.Mesh(new THREE.IcosahedronGeometry(2, 1), new THREE.MeshBasicMaterial({ color: 0x00d4ff, wireframe: true }));
         scene.add(core);
         camera.position.z = 6;
 
         function triggerFireball() {
-            const fb = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff4500 }));
-            fb.position.set(Math.random()*10-5, 8, -5);
+            const fb = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff4500 }));
+            fb.position.set(Math.random()*12-6, 8, -5);
             scene.add(fb);
             const start = performance.now();
             function move(now) {
@@ -139,7 +191,7 @@
             const intro = document.getElementById('intro');
             const box = document.getElementById('intro-text-box');
             intro.style.display = 'flex';
-            const lines = ["Welcome, Keeper.", "Reality has been shuffled.", "No two journeys are the same.", "Watch the Core."];
+            const lines = ["Keeper, welcome.", "Societal stability is a 50/50 game.", "Every choice has a dark reflection.", "Maintain the balance."];
             let cur = 0;
             const cycle = setInterval(() => {
                 box.innerText = lines[cur++];
@@ -155,15 +207,15 @@
         window.handleChoice = (approved) => {
             if(state.isProcessing) return;
             state.isProcessing = true;
-            const s = Scenarios[state.idx];
-            const isGood = Math.random() < s.chance;
-            const correct = (approved && isGood) || (!approved && !isGood);
-
+            
+            const isGoodOutcome = Math.random() > 0.5;
+            const correct = (approved && isGoodOutcome) || (!approved && !isGoodOutcome);
             if(!correct) triggerFireball();
 
+            const s = Scenarios[state.idx];
             const overlay = document.getElementById('outcome-overlay');
             overlay.style.display = 'flex';
-            document.getElementById('outcome-status').innerText = correct ? "STABLE" : "FRACTURED";
+            document.getElementById('outcome-status').innerText = correct ? "SYSTEM STABLE" : "SOCIETAL FRACTURE";
             document.getElementById('outcome-status').style.color = correct ? "#00ff00" : "#ff0000";
             document.getElementById('outcome-desc').innerText = correct ? s.pos : s.neg;
 
@@ -182,13 +234,11 @@
             const stabEl = document.getElementById('stability-val');
             stabEl.innerText = state.stability + "%";
             
-            // STABILITY COLOR
-            if (state.stability > 70) stabEl.style.color = "#00ffcc";
-            else if (state.stability > 30) stabEl.style.color = "#ffcc00";
+            if (state.stability > 75) stabEl.style.color = "#00ffcc";
+            else if (state.stability > 40) stabEl.style.color = "#ffcc00";
             else stabEl.style.color = "#ff0000";
 
-            // GLITCH EFFECT
-            if (state.stability < 25) {
+            if (state.stability < 30) {
                 document.getElementById('main-body').classList.add('glitching');
                 core.material.color.set(0xff0000);
             } else {
@@ -196,7 +246,7 @@
                 core.material.color.set(0x00d4ff);
             }
 
-            if(state.stability <= 0) { alert("REALITY COLLAPSED"); location.reload(); }
+            if(state.stability <= 0) { alert("SOCIAL ORDER COLLAPSED."); location.reload(); }
         }
 
         let lp = 0;
@@ -204,11 +254,11 @@
             lp += 10;
             document.getElementById('progress-fill').style.width = lp + "%";
             if(lp >= 100) { clearInterval(li); document.getElementById('loader').style.display = 'none'; document.getElementById('menu').style.display = 'flex'; }
-        }, 80);
+        }, 60);
 
         function animate() {
             requestAnimationFrame(animate);
-            core.rotation.y += (state.stability < 30 ? 0.05 : 0.01);
+            core.rotation.y += (state.stability < 30 ? 0.08 : 0.015);
             renderer.render(scene, camera);
         }
         animate();
