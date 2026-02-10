@@ -9,11 +9,11 @@
         /* --- DANGER EFFECTS --- */
         @keyframes glitch {
             0% { transform: translate(0); }
-            20% { transform: translate(-3px, 3px); filter: brightness(1.5) contrast(1.2); }
-            40% { transform: translate(3px, -3px); filter: hue-rotate(45deg); }
+            20% { transform: translate(-3px, 3px); filter: brightness(1.2) contrast(1.2); }
+            40% { transform: translate(3px, -3px); filter: hue-rotate(10deg); }
             100% { transform: translate(0); }
         }
-        .glitching { animation: glitch 0.15s infinite; }
+        .glitching { animation: glitch 0.2s infinite; }
 
         @keyframes rainbow { 0% { color: red; } 20% { color: yellow; } 40% { color: green; } 60% { color: blue; } 80% { color: purple; } 100% { color: red; } }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -30,7 +30,7 @@
         .main-btn:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
 
         #game-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; padding: 40px; box-sizing: border-box; z-index: 10; pointer-events: none; flex-direction: column; justify-content: space-between; }
-        .panel { pointer-events: auto; background: rgba(0,0,0,0.9); border: 1px solid #00d4ff; padding: 30px; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
+        .panel { pointer-events: auto; background: rgba(0,0,0,0.95); border: 1px solid #00d4ff; padding: 30px; }
         #outcome-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.98); display:none; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding: 20px; z-index: 50; }
         
         #stability-val { font-size: 3.5em; font-weight: bold; transition: color 0.5s; color: #00ffcc; }
@@ -44,7 +44,7 @@
     </div>
 
     <div id="loader" class="screen">
-        <div style="letter-spacing: 5px; font-weight: bold;">CALIBRATING REALITY...</div>
+        <div style="letter-spacing: 5px; font-weight: bold;">SYNCHRONIZING GLOBAL DATA...</div>
         <div style="width: 300px; height: 2px; background: #222; margin-top: 20px;"><div id="progress-fill"></div></div>
         <div style="margin-top: 30px; opacity: 0.6; font-size: 0.8em;">Credits to - Ashen(@ashenthegreat3992)</div>
     </div>
@@ -52,7 +52,7 @@
     <div id="menu" class="screen">
         <div id="roblox-promo">Go follow the creator of this website on roblox, darkco281110!</div>
         <h1 style="font-size: 4em; letter-spacing: 12px; margin-bottom: 0;">THE BUTTERFLY LEDGER</h1>
-        <div style="color: #666; margin-bottom: 40px; font-style: italic;">"Every choice is a 50/50 gamble."</div>
+        <div style="color: #666; margin-bottom: 40px; font-style: italic;">"Realistic Policy. Chaotic Results."</div>
         <button class="main-btn" onclick="triggerIntroFlow()">START SIMULATION</button>
     </div>
 
@@ -62,7 +62,7 @@
 
     <div id="game-ui">
         <div class="panel" id="main-panel" style="width: 500px;">
-            <div id="shift-label" style="color: #00d4ff; font-size: 0.8em; margin-bottom: 10px; font-weight: bold;">DECISION NODE</div>
+            <div id="shift-label" style="color: #00d4ff; font-size: 0.8em; margin-bottom: 10px; font-weight: bold;">POLICY NODE</div>
             <div id="scenario-text" style="min-height: 100px; font-size: 1.3em; line-height: 1.4;">Connecting...</div>
             <div style="display:flex; gap:15px; margin-top:20px;">
                 <button class="main-btn" style="flex:1; border-color:#00ff00;" onclick="handleChoice(true)">APPROVE</button>
@@ -84,73 +84,73 @@
     <script type="module">
         import * as THREE from 'three';
 
-        // --- MASSIVELY EXPANDED REALISTIC LISTS ---
+        // --- 100% REALISTIC ASSETS ---
         const subjects = [
-            "A tech conglomerate", "The City Council", "A National Union", "A group of Surgeons", 
-            "A pharmaceutical firm", "A School Board", "An Oil Executive", "A Civil Engineer", 
-            "A massive NGO", "A startup founder", "A social media giant", "An urban planning committee",
-            "A global shipping magnate", "A coalition of farmers", "A network of librarians"
+            "A logistics firm", "The City Council", "A real estate developer", "A national labor union", 
+            "The Department of Transit", "A local school board", "A tech conglomerate", "An urban planning committee", 
+            "A retail giant", "A farmers' cooperative", "A public health agency", "The regional power grid",
+            "A massive hotel chain", "A civil engineering firm", "A city-wide recycling non-profit"
         ];
 
         const actions = [
-            "replace all human truck drivers with AI",
-            "implement a mandatory 4-day work week",
-            "build a massive dam on the local river",
-            "digitize all physical medical records",
-            "increase the minimum wage by $10",
-            "install facial recognition in all parks",
-            "legalize a performance-enhancing drug",
-            "tax all digital financial transactions",
-            "dredge the harbor for larger ships",
-            "standardize AI-graded student exams",
-            "outlaw all single-use plastic packaging",
-            "ban anonymous social media accounts",
-            "convert all vacant malls into public housing",
-            "implement a universal basic income",
-            "automate the city's emergency response calls"
+            "expand the main suburban highway by four lanes",
+            "replace all downtown traffic lights with roundabouts",
+            "implement a mandatory 4-day work week for city employees",
+            "convert the vacant shopping mall into low-income housing",
+            "increase the local sales tax by 2% for public transit",
+            "outlaw all single-use plastic bags in grocery stores",
+            "install automated speed cameras in every school zone",
+            "subsidize the transition to electric delivery trucks",
+            "privatize the city's public water filtration system",
+            "mandate that all new buildings include rooftop gardens",
+            "tax all vacant commercial properties at double the rate",
+            "deregulate the height limits for downtown skyscrapers",
+            "ban all cars from the historic district after 6:00 PM",
+            "build a bridge connecting the industrial park to the suburbs",
+            "replace all city-owned gas vehicles with hybrid alternatives"
         ];
 
         const goods = [
-            "Logistics became 50% cheaper and faster.",
-            "Worker morale skyrocketed; productivity peaked.",
-            "The region gained 100% clean hydro-energy.",
-            "Doctors diagnosed terminal illnesses 3x faster.",
-            "The local economy boomed; poverty vanished.",
-            "Crime in public spaces fell by 30% instantly.",
-            "Human cognitive output reached a new ceiling.",
-            "The national deficit was cleared within a year.",
-            "Port revenue tripled, creating thousands of jobs.",
-            "Education quality reached perfect consistency.",
-            "The oceans began to heal for the first time.",
-            "Online harassment vanished; discourse improved.",
-            "Homelessness in the city dropped to near zero.",
-            "People spent more time on art and community.",
-            "Response times for fires dropped to 60 seconds."
+            "Traffic congestion cleared; commute times were halved.",
+            "Accidents dropped by 60% in high-traffic intersections.",
+            "Worker morale peaked; city services became more efficient.",
+            "Homelessness dropped; the downtown area saw a revival.",
+            "The new subway line was finished ahead of schedule.",
+            "Local landfills saw a massive reduction in daily waste.",
+            "School zones became significantly safer for children.",
+            "Air quality in the city reached its cleanest in decades.",
+            "Water quality improved; utility costs for citizens dropped.",
+            "City temperatures cooled; energy bills fell for everyone.",
+            "Small businesses moved in; the local economy boomed.",
+            "The city skyline became a world-class architectural marvel.",
+            "The district became a thriving hub for dining and tourism.",
+            "Industrial shipping costs fell; 2,000 new jobs were created.",
+            "Carbon emissions dropped; fuel costs for the city vanished."
         ];
 
         const bads = [
-            "Mass unemployment led to violent nation-wide riots.",
-            "The economy slowed; major corporations fled.",
-            "The river ecosystem died; the valley flooded.",
-            "A massive leak exposed every citizen's vitals.",
-            "Hyper-inflation turned the currency into paper.",
-            "The system was used to track and silence rivals.",
-            "Addiction rates crippled the working class.",
-            "The digital market crashed; millions lost savings.",
-            "Erosion destroyed the city's coastal foundation.",
-            "Creativity died; students became mere test-bots.",
-            "Supply chains broke; food prices soared by 200%.",
-            "Free speech died; the state took full control.",
-            "Property values collapsed; the city went bankrupt.",
-            "No one wanted to work; the labor force died out.",
-            "The system glitched, ignoring thousands of calls."
+            "The construction caused a permanent 2-year gridlock.",
+            "Confusion led to a record-high number of vehicle pile-ups.",
+            "City services slowed to a crawl; budget deficits grew.",
+            "The mall became an unsafe, overcrowded concrete cage.",
+            "Consumer spending plummeted; local shops went bankrupt.",
+            "Small stores struggled; packaging costs soared for families.",
+            "The cameras were hacked, leaking location data of citizens.",
+            "The grid failed under the sudden demand for charging.",
+            "Water prices tripled; the private firm cut off low-income areas.",
+            "Maintenance costs soared; buildings suffered structural leaks.",
+            "Property owners fled the city, leaving blocks abandoned.",
+            "The skyscrapers blocked all sunlight, killing city parks.",
+            "Business owners lost 50% of revenue; the district died.",
+            "The bridge collapsed due to poor soil, costing billions.",
+            "The hybrid battery disposal created a toxic soil crisis."
         ];
 
         function generateRealisticScenarios(count) {
             let list = [];
             for(let i=0; i<count; i++) {
                 let sIdx = Math.floor(Math.random() * subjects.length);
-                let aIdx = Math.floor(Math.random() * actions.length); // Keep action/good/bad synced
+                let aIdx = Math.floor(Math.random() * actions.length);
                 list.push({
                     text: `${subjects[sIdx]} wants to ${actions[aIdx]}.`,
                     pos: goods[aIdx],
@@ -191,7 +191,7 @@
             const intro = document.getElementById('intro');
             const box = document.getElementById('intro-text-box');
             intro.style.display = 'flex';
-            const lines = ["Keeper, welcome.", "Societal stability is a 50/50 game.", "Every choice has a dark reflection.", "Maintain the balance."];
+            const lines = ["Keeper, welcome.", "Simulating real-world variables.", "Stability is a 50/50 gamble.", "One choice can break the city."];
             let cur = 0;
             const cycle = setInterval(() => {
                 box.innerText = lines[cur++];
@@ -208,6 +208,7 @@
             if(state.isProcessing) return;
             state.isProcessing = true;
             
+            // --- PURE 50/50 LOGIC ---
             const isGoodOutcome = Math.random() > 0.5;
             const correct = (approved && isGoodOutcome) || (!approved && !isGoodOutcome);
             if(!correct) triggerFireball();
@@ -246,7 +247,7 @@
                 core.material.color.set(0x00d4ff);
             }
 
-            if(state.stability <= 0) { alert("SOCIAL ORDER COLLAPSED."); location.reload(); }
+            if(state.stability <= 0) { alert("SOCIAL ORDER COLLAPSED. THE SIMULATION HAS ENDED."); location.reload(); }
         }
 
         let lp = 0;
